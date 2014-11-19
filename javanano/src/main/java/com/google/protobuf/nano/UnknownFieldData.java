@@ -1,5 +1,5 @@
 // Protocol Buffers - Google's data interchange format
-// Copyright 2008 Google Inc.  All rights reserved.
+// Copyright 2013 Google Inc.  All rights reserved.
 // http://code.google.com/p/protobuf/
 //
 // Redistribution and use in source and binary forms, with or without
@@ -28,60 +28,57 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Author: kenton@google.com (Kenton Varda)
-//  Based on original Protocol Buffers design by
-//  Sanjay Ghemawat, Jeff Dean, and others.
+package com.google.protobuf.nano;
 
-#ifndef GOOGLE_PROTOBUF_COMPILER_JAVANANO_ENUM_H__
-#define GOOGLE_PROTOBUF_COMPILER_JAVANANO_ENUM_H__
+import java.io.IOException;
+import java.util.Arrays;
 
-#include <string>
-#include <vector>
+/**
+ * Stores unknown fields. These might be extensions or fields that the generated
+ * API doesn't know about yet.
+ *
+ * @author bduff@google.com (Brian Duff)
+ */
+final class UnknownFieldData {
 
-#include <google/protobuf/compiler/javanano/javanano_params.h>
-#include <google/protobuf/descriptor.h>
+    final int tag;
+    final byte[] bytes;
 
-namespace google {
-namespace protobuf {
-  namespace io {
-    class Printer;             // printer.h
-  }
+    UnknownFieldData(int tag, byte[] bytes) {
+        this.tag = tag;
+        this.bytes = bytes;
+    }
+
+    int computeSerializedSize() {
+        int size = 0;
+        size += CodedOutputByteBufferNano.computeRawVarint32Size(tag);
+        size += bytes.length;
+        return size;
+    }
+
+    void writeTo(CodedOutputByteBufferNano output) throws IOException {
+        output.writeRawVarint32(tag);
+        output.writeRawBytes(bytes);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof UnknownFieldData)) {
+            return false;
+        }
+
+        UnknownFieldData other = (UnknownFieldData) o;
+        return tag == other.tag && Arrays.equals(bytes, other.bytes);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + tag;
+        result = 31 * result + Arrays.hashCode(bytes);
+        return result;
+    }
 }
-
-namespace protobuf {
-namespace compiler {
-namespace javanano {
-
-class EnumGenerator {
- public:
-  explicit EnumGenerator(const EnumDescriptor* descriptor, const Params& params);
-  ~EnumGenerator();
-
-  void Generate(io::Printer* printer);
-
- private:
-  const Params& params_;
-  const EnumDescriptor* descriptor_;
-
-  // The proto language allows multiple enum constants to have the same numeric
-  // value.  Java, however, does not allow multiple enum constants to be
-  // considered equivalent.  We treat the first defined constant for any
-  // given numeric value as "canonical" and the rest as aliases of that
-  // canonical value.
-  vector<const EnumValueDescriptor*> canonical_values_;
-
-  struct Alias {
-    const EnumValueDescriptor* value;
-    const EnumValueDescriptor* canonical_value;
-  };
-  vector<Alias> aliases_;
-
-  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(EnumGenerator);
-};
-
-}  // namespace javanano
-}  // namespace compiler
-}  // namespace protobuf
-
-}  // namespace google
-#endif  // GOOGLE_PROTOBUF_COMPILER_JAVANANO_ENUM_H__

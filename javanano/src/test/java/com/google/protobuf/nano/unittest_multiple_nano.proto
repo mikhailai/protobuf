@@ -28,60 +28,36 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Author: kenton@google.com (Kenton Varda)
-//  Based on original Protocol Buffers design by
-//  Sanjay Ghemawat, Jeff Dean, and others.
+// Author: maxtroy@google.com (Max Cai)
 
-#ifndef GOOGLE_PROTOBUF_COMPILER_JAVANANO_ENUM_H__
-#define GOOGLE_PROTOBUF_COMPILER_JAVANANO_ENUM_H__
+package protobuf_unittest_import;
 
-#include <string>
-#include <vector>
+import "google/protobuf/nano/unittest_import_nano.proto";
 
-#include <google/protobuf/compiler/javanano/javanano_params.h>
-#include <google/protobuf/descriptor.h>
+option java_package = "com.google.protobuf.nano";
+option java_multiple_files = true;
 
-namespace google {
-namespace protobuf {
-  namespace io {
-    class Printer;             // printer.h
-  }
+enum FileScopeEnum {
+  ONE = 1;
+  TWO = 2;
 }
 
-namespace protobuf {
-namespace compiler {
-namespace javanano {
+message FileScopeEnumRefNano {
+  optional FileScopeEnum enum_field = 1;
+}
 
-class EnumGenerator {
- public:
-  explicit EnumGenerator(const EnumDescriptor* descriptor, const Params& params);
-  ~EnumGenerator();
+message MessageScopeEnumRefNano {
+  enum MessageScopeEnum {
+    ONE = 1;
+    TWO = 2;
+  }
+  optional MessageScopeEnum enum_field = 1;
+}
 
-  void Generate(io::Printer* printer);
+message MultipleImportingNonMultipleNano1 {
+  optional ImportMessageNano field = 1;
+}
 
- private:
-  const Params& params_;
-  const EnumDescriptor* descriptor_;
-
-  // The proto language allows multiple enum constants to have the same numeric
-  // value.  Java, however, does not allow multiple enum constants to be
-  // considered equivalent.  We treat the first defined constant for any
-  // given numeric value as "canonical" and the rest as aliases of that
-  // canonical value.
-  vector<const EnumValueDescriptor*> canonical_values_;
-
-  struct Alias {
-    const EnumValueDescriptor* value;
-    const EnumValueDescriptor* canonical_value;
-  };
-  vector<Alias> aliases_;
-
-  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(EnumGenerator);
-};
-
-}  // namespace javanano
-}  // namespace compiler
-}  // namespace protobuf
-
-}  // namespace google
-#endif  // GOOGLE_PROTOBUF_COMPILER_JAVANANO_ENUM_H__
+message MultipleImportingNonMultipleNano2 {
+  optional MultipleImportingNonMultipleNano1 nano1 = 1;
+}
