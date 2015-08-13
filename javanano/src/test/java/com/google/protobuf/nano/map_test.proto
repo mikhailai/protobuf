@@ -28,27 +28,43 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Author: wink@google.com (Wink Saville)
-//
+syntax = "proto3";
 
-package protobuf_unittest_import;
+package map_test;
 
 option java_package = "com.google.protobuf";
-// Explicit outer classname to suppress legacy info.
-option java_outer_classname = "UnittestSimpleNano";
+option java_outer_classname = "MapTestProto";
 
-message SimpleMessageNano {
-  message NestedMessage {
-    optional int32 bb = 1;
+message TestMap {
+  message MessageValue {
+    int32 value = 1;
+    int32 value2 = 2;
+  }
+  enum EnumValue {
+    FOO = 0;
+    BAR = 1;
+    BAZ = 2;
+    QUX = 3;
   }
 
-  enum NestedEnum {
-    FOO = 1;
-    BAR = 2;
-    BAZ = 3;
-  }
+  map<int32, int32>        int32_to_int32_field = 1;
+  map<int32, string>       int32_to_string_field = 2;
+  map<int32, bytes>        int32_to_bytes_field = 3;
+  map<int32, EnumValue>    int32_to_enum_field = 4;
+  map<int32, MessageValue> int32_to_message_field = 5;
+  map<string, int32>       string_to_int32_field = 6;
+  map<bool, bool>          bool_to_bool_field = 7;
 
-  optional int32 d = 1 [default = 123];
-  optional NestedMessage nested_msg = 2;
-  optional NestedEnum default_nested_enum = 3 [default = BAZ];
+  // Test all the other primitive types. As the key and value are not coupled in
+  // the implementation, we do not test all the combinations of key/value pairs,
+  // so that we can keep the number of test cases manageable
+  map<uint32, uint32>      uint32_to_uint32_field = 11;
+  map<sint32, sint32>      sint32_to_sint32_field = 12;
+  map<fixed32, fixed32>    fixed32_to_fixed32_field = 13;
+  map<sfixed32, sfixed32>  sfixed32_to_sfixed32_field = 14;
+  map<int64, int64>        int64_to_int64_field = 15;
+  map<uint64, uint64>      uint64_to_uint64_field = 16;
+  map<sint64, sint64>      sint64_to_sint64_field = 17;
+  map<fixed64, fixed64>    fixed64_to_fixed64_field = 18;
+  map<sfixed64, sfixed64>  sfixed64_to_sfixed64_field = 19;
 }

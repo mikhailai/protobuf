@@ -1,5 +1,5 @@
 // Protocol Buffers - Google's data interchange format
-// Copyright 2008 Google Inc.  All rights reserved.
+// Copyright 2013 Google Inc.  All rights reserved.
 // https://developers.google.com/protocol-buffers/
 //
 // Redistribution and use in source and binary forms, with or without
@@ -28,27 +28,40 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Author: wink@google.com (Wink Saville)
-//
+package com.google.protobuf.nano;
 
-package protobuf_unittest_import;
+import java.util.HashMap;
+import java.util.Map;
 
-option java_package = "com.google.protobuf";
-// Explicit outer classname to suppress legacy info.
-option java_outer_classname = "UnittestSimpleNano";
-
-message SimpleMessageNano {
-  message NestedMessage {
-    optional int32 bb = 1;
+/**
+ * Utility class for maps support.
+ */
+public final class MapFactories {
+  public static interface MapFactory {
+    <K, V> Map<K, V> forMap(Map<K, V> oldMap);
   }
 
-  enum NestedEnum {
-    FOO = 1;
-    BAR = 2;
-    BAZ = 3;
+  // NOTE(liujisi): The factory setter is temporarily marked as package private.
+  // The way to provide customized implementations of maps for different
+  // platforms are still under discussion.  Mark it as private to avoid exposing
+  // the API in proto3 alpha release.
+  /* public */ static void setMapFactory(MapFactory newMapFactory) {
+    mapFactory = newMapFactory;
   }
 
-  optional int32 d = 1 [default = 123];
-  optional NestedMessage nested_msg = 2;
-  optional NestedEnum default_nested_enum = 3 [default = BAZ];
+  public static MapFactory getMapFactory() {
+    return mapFactory;
+  }
+
+  private static class DefaultMapFactory implements MapFactory {
+    public <K, V> Map<K, V> forMap(Map<K, V> oldMap) {
+      if (oldMap == null) {
+        return new HashMap<K, V>();
+      }
+      return oldMap;
+    }
+  }
+  private static volatile MapFactory mapFactory = new DefaultMapFactory();
+
+  private MapFactories() {}
 }

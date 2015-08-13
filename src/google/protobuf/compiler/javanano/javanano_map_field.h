@@ -1,6 +1,6 @@
 // Protocol Buffers - Google's data interchange format
 // Copyright 2008 Google Inc.  All rights reserved.
-// https://developers.google.com/protocol-buffers/
+// http://code.google.com/p/protobuf/
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -28,27 +28,43 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Author: wink@google.com (Wink Saville)
-//
+#ifndef GOOGLE_PROTOBUF_COMPILER_JAVANANO_MAP_FIELD_H__
+#define GOOGLE_PROTOBUF_COMPILER_JAVANANO_MAP_FIELD_H__
 
-package protobuf_unittest_import;
+#include <map>
+#include <string>
+#include <vector>
+#include <google/protobuf/compiler/javanano/javanano_field.h>
 
-option java_package = "com.google.protobuf";
-// Explicit outer classname to suppress legacy info.
-option java_outer_classname = "UnittestSimpleNano";
+namespace google {
+namespace protobuf {
+namespace compiler {
+namespace javanano {
 
-message SimpleMessageNano {
-  message NestedMessage {
-    optional int32 bb = 1;
-  }
+class MapFieldGenerator : public FieldGenerator {
+ public:
+  explicit MapFieldGenerator(
+      const FieldDescriptor* descriptor, const Params& params);
+  ~MapFieldGenerator();
 
-  enum NestedEnum {
-    FOO = 1;
-    BAR = 2;
-    BAZ = 3;
-  }
+  // implements FieldGenerator ---------------------------------------
+  void GenerateMembers(io::Printer* printer, bool lazy_init) const;
+  void GenerateClearCode(io::Printer* printer) const;
+  void GenerateMergingCode(io::Printer* printer) const;
+  void GenerateSerializationCode(io::Printer* printer) const;
+  void GenerateSerializedSizeCode(io::Printer* printer) const;
+  void GenerateEqualsCode(io::Printer* printer) const;
+  void GenerateHashCodeCode(io::Printer* printer) const;
 
-  optional int32 d = 1 [default = 123];
-  optional NestedMessage nested_msg = 2;
-  optional NestedEnum default_nested_enum = 3 [default = BAZ];
-}
+ private:
+  const FieldDescriptor* descriptor_;
+  map<string, string> variables_;
+
+  GOOGLE_DISALLOW_EVIL_CONSTRUCTORS(MapFieldGenerator);
+};
+
+}  // namespace javanano
+}  // namespace compiler
+}  // namespace protobuf
+}  // namespace google
+#endif  // GOOGLE_PROTOBUF_COMPILER_JAVANANO_MAP_FIELD_H__
