@@ -1,20 +1,23 @@
-Protocol Buffers Extension - Google's data interchange format
-==========================================================
+Extension for Google's Protocol Buffers
+========================================
 
-Copyright 2008 Google Inc.
+Copyright 2008 Google Inc.<br>
+The protocol buffers code:
+https://github.com/protocolbuffers/protobuf<br>
+Reference:
+https://developers.google.com/protocol-buffers/
 
 Overview
 --------
 This repository contains Java Protocol Buffers Nano compiler plugin and
-runtime library. Google released the Java Nano for a short time, and then
-decided to stop supporting it, and removed the code. I copied the removed
-Javanano code here, and made it compile again. This repository contains
-two following components.
+runtime library. Google published the Java Nano code for a short time, 
+then stoped supporting it, and removed the code. The repository contains
+that code, made compile again. It consists of the two following components.
 
 Java Nano Runtime Library
 -------------------------
 
-It should be build with Maven. To generate .jar file, cd into "javanano"
+Should be build with Maven. To generate .jar file, cd into "javanano"
 and run:
 
      $ mvn package
@@ -32,7 +35,7 @@ Allows compiling the the .proto file into Java nano. To build, run:
 
      $ bazel build ...
 
-You would need to have Bazel installed, see: https://bazel.build/
+You would need to install Bazel, see https://bazel.build for more details.
 
 The resulting binary will be:
 
