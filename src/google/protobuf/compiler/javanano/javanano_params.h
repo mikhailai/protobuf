@@ -42,6 +42,11 @@ namespace protobuf {
 namespace compiler {
 namespace javanano {
 
+// Let's just define these here, so these will be used throughout javanano:
+using std::map;
+using std::vector;
+using std::set;
+
 enum eMultipleFiles { JAVANANO_MUL_UNSET, JAVANANO_MUL_FALSE, JAVANANO_MUL_TRUE };
 
 // Parameters for used by the generators

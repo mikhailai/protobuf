@@ -47,6 +47,8 @@ namespace protobuf {
 namespace compiler {
 namespace javanano {
 
+using std::numeric_limits;
+
 const char kThickSeparator[] =
   "// ===================================================================\n";
 const char kThinSeparator[] =
