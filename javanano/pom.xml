@@ -10,7 +10,7 @@
   </parent>
   <groupId>com.google.protobuf.nano</groupId>
   <artifactId>protobuf-javanano</artifactId>
-  <version>3.2.0</version>
+  <version>3.2.1</version>
   <packaging>bundle</packaging>
   <name>Protocol Buffer JavaNano API</name>
   <description>
@@ -34,6 +34,7 @@
   </scm>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <protoc.version>3.2.0</protoc.version>
   </properties>
   <dependencies>
     <dependency>
@@ -54,18 +55,34 @@
       <version>2.2.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protoc</artifactId>
+      <version>${protoc.version}</version>
+      <classifier>${os.detected.classifier}</classifier>
+      <type>exe</type>
+    </dependency>
   </dependencies>
   <build>
+    <extensions>
+      <extension>
+        <groupId>kr.motd.maven</groupId>
+        <artifactId>os-maven-plugin</artifactId>
+        <version>1.6.1</version>
+      </extension>
+    </extensions>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.6.2</version>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.7</source>
+          <target>1.7</target>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.22.1</version>
         <configuration>
           <includes>
             <include>**/*Test.java</include>
@@ -80,8 +97,12 @@
             <phase>generate-test-sources</phase>
             <configuration>
               <tasks>
+                <!-- Stupid Maven forces us to replicate the path here: -->
+                <property name="protoc.path"
+                  value="${settings.localRepository}/com/google/protobuf/protoc/${protoc.version}/protoc-${protoc.version}-${os.detected.classifier}.exe"/>
+                <chmod file="${protoc.path}" perm="0755"/>
                 <mkdir dir="target/generated-test-sources" />
-                <exec executable="../src/protoc">
+                <exec executable="${protoc.path}">
                   <arg value="--javanano_out=generate_equals=true:target/generated-test-sources" />
                   <arg value="--proto_path=src/test/java/com" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_nano.proto" />
@@ -96,29 +117,29 @@
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_repeated_merge_nano.proto" />
                   <arg value="src/test/java/com/google/protobuf/nano/map_test.proto" />
                 </exec>
-                <exec executable="../src/protoc">
+                <exec executable="${protoc.path}">
                   <arg value="--javanano_out=store_unknown_fields=true,generate_equals=true,generate_clone=true:target/generated-test-sources" />
                   <arg value="--proto_path=src/test/java/com" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_extension_nano.proto" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_extension_singular_nano.proto" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_extension_repeated_nano.proto" />
                 </exec>
-                <exec executable="../src/protoc">
+                <exec executable="${protoc.path}">
                   <arg value="--javanano_out=store_unknown_fields=true,generate_clone=true:target/generated-test-sources" />
                   <arg value="--proto_path=src/test/java/com" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_extension_packed_nano.proto" />
                 </exec>
-                <exec executable="../src/protoc">
+                <exec executable="${protoc.path}">
                   <arg value="--javanano_out=java_nano_generate_has=true,generate_equals=true,generate_clone=true:target/generated-test-sources" />
                   <arg value="--proto_path=src/test/java/com" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_has_nano.proto" />
                 </exec>
-                <exec executable="../src/protoc">
+                <exec executable="${protoc.path}">
                   <arg value="--javanano_out=optional_field_style=accessors,generate_equals=true:target/generated-test-sources" />
                   <arg value="--proto_path=src/test/java/com" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_accessors_nano.proto" />
                 </exec>
-                <exec executable="../src/protoc">
+                <exec executable="${protoc.path}">
                   <arg value="--javanano_out=enum_style=java:target/generated-test-sources" />
                   <arg value="--proto_path=src/test/java/com" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_enum_class_nano.proto" />
@@ -126,7 +147,7 @@
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_repeated_packables_nano.proto" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_enum_validity_nano.proto" />
                 </exec>
-                <exec executable="../src/protoc">
+                <exec executable="${protoc.path}">
                   <arg value="--javanano_out=
                                   optional_field_style=accessors,
                                   java_outer_classname=google/protobuf/nano/unittest_enum_validity_nano.proto|EnumValidityAccessors
@@ -134,12 +155,12 @@
                   <arg value="--proto_path=src/test/java/com" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_enum_validity_nano.proto" />
                 </exec>
-                <exec executable="../src/protoc">
+                <exec executable="${protoc.path}">
                   <arg value="--javanano_out=optional_field_style=reftypes,generate_equals=true:target/generated-test-sources" />
                   <arg value="--proto_path=src/test/java/com" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_reference_types_nano.proto" />
                 </exec>
-                <exec executable="../src/protoc">
+                <exec executable="${protoc.path}">
                   <arg value="--javanano_out=
                                   optional_field_style=reftypes_compat_mode,
                                   generate_equals=true,
@@ -160,12 +181,13 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
+        <version>3.5.1</version>
         <extensions>true</extensions>
         <configuration>
           <instructions>
             <Bundle-DocURL>https://developers.google.com/protocol-buffers/</Bundle-DocURL>
             <Bundle-SymbolicName>com.google.protobuf.nano</Bundle-SymbolicName>
-            <Export-Package>com.google.protobuf.nano;version=3.0.0-alpha-7</Export-Package>
+            <Export-Package>com.google.protobuf.nano;version=${project.version}</Export-Package>
           </instructions>
         </configuration>
       </plugin>

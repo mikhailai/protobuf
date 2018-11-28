@@ -30,6 +30,7 @@
 
 // Author: wink@google.com (Wink Saville)
 //
+syntax = "proto2";
 
 package protobuf_unittest_import;
 

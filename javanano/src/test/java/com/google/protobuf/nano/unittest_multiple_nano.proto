@@ -30,6 +30,8 @@
 
 // Author: maxtroy@google.com (Max Cai)
 
+syntax = "proto2";
+
 package protobuf_unittest_import;
 
 import "google/protobuf/nano/unittest_import_nano.proto";

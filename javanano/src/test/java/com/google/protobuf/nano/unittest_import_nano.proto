@@ -32,6 +32,8 @@
 //
 // This is like unittest_import.proto but with optimize_for = NANO_RUNTIME.
 
+syntax = "proto2";
+
 package protobuf_unittest_import;
 
 option java_package = "com.google.protobuf.nano.testimport";

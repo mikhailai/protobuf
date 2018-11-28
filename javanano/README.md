@@ -43,6 +43,11 @@ rather build without Maven, see below.
      $ mvn package
 
    The .jar will be placed in the "target" directory.
+   Also, if you want to skip building/running tests and just build
+   the package, run:
+
+     $ mvn package -Dmaven.test.skip=true
+
 
 Installation - Without Maven
 ----------------------------
