@@ -31,10 +31,7 @@
 package com.google.protobuf.nano;
 
 import java.io.IOException;
-import java.nio.BufferOverflowException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.ReadOnlyBufferException;
+import java.nio.*;
 
 /**
  * Encodes and writes protocol message fields.
@@ -63,6 +60,16 @@ public final class CodedOutputByteBufferNano {
   private CodedOutputByteBufferNano(final ByteBuffer buffer) {
     this.buffer = buffer;
     this.buffer.order(ByteOrder.LITTLE_ENDIAN);
+  }
+
+  /**
+   * Create a new {@code CodedOutputStream} that writes directly to the given
+   * ByteBuffer.  If more bytes are written than fit in the buffer,
+   * {@link OutOfSpaceException} will be thrown. Writing into a direct
+   * ByteBuffer is somewhat more efficient.
+   */
+  public static CodedOutputByteBufferNano newInstance(ByteBuffer buffer) {
+    return new CodedOutputByteBufferNano(buffer);
   }
 
   /**
