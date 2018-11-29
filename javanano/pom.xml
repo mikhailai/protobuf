@@ -34,7 +34,7 @@
   </scm>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <protoc.version>3.2.0</protoc.version>
+    <protoc.version>3.6.1</protoc.version>
   </properties>
   <dependencies>
     <dependency>
@@ -100,9 +100,18 @@
                 <!-- Stupid Maven forces us to replicate the path here: -->
                 <property name="protoc.path"
                   value="${settings.localRepository}/com/google/protobuf/protoc/${protoc.version}/protoc-${protoc.version}-${os.detected.classifier}.exe"/>
+                <property name="plugin.path" value="../bazel-bin/"/>
+                <fail message="ERROR: Please build protoc plugin: we depend on it, unfortunately'">
+                  <condition>
+                    <not>
+                      <available file="${plugin.path}/protoc-gen-javanano" />
+                    </not>
+                  </condition>
+                </fail>
                 <chmod file="${protoc.path}" perm="0755"/>
                 <mkdir dir="target/generated-test-sources" />
-                <exec executable="${protoc.path}">
+                <exec executable="${protoc.path}" failonerror="true">
+                  <env key="PATH" path="${plugin.path}"/>
                   <arg value="--javanano_out=generate_equals=true:target/generated-test-sources" />
                   <arg value="--proto_path=src/test/java/com" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_nano.proto" />
@@ -117,29 +126,34 @@
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_repeated_merge_nano.proto" />
                   <arg value="src/test/java/com/google/protobuf/nano/map_test.proto" />
                 </exec>
-                <exec executable="${protoc.path}">
+                <exec executable="${protoc.path}" failonerror="true">
+                  <env key="PATH" path="${plugin.path}"/>
                   <arg value="--javanano_out=store_unknown_fields=true,generate_equals=true,generate_clone=true:target/generated-test-sources" />
                   <arg value="--proto_path=src/test/java/com" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_extension_nano.proto" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_extension_singular_nano.proto" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_extension_repeated_nano.proto" />
                 </exec>
-                <exec executable="${protoc.path}">
+                <exec executable="${protoc.path}" failonerror="true">
+                  <env key="PATH" path="${plugin.path}"/>
                   <arg value="--javanano_out=store_unknown_fields=true,generate_clone=true:target/generated-test-sources" />
                   <arg value="--proto_path=src/test/java/com" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_extension_packed_nano.proto" />
                 </exec>
-                <exec executable="${protoc.path}">
+                <exec executable="${protoc.path}" failonerror="true">
+                  <env key="PATH" path="${plugin.path}"/>
                   <arg value="--javanano_out=java_nano_generate_has=true,generate_equals=true,generate_clone=true:target/generated-test-sources" />
                   <arg value="--proto_path=src/test/java/com" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_has_nano.proto" />
                 </exec>
-                <exec executable="${protoc.path}">
+                <exec executable="${protoc.path}" failonerror="true">
+                  <env key="PATH" path="${plugin.path}"/>
                   <arg value="--javanano_out=optional_field_style=accessors,generate_equals=true:target/generated-test-sources" />
                   <arg value="--proto_path=src/test/java/com" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_accessors_nano.proto" />
                 </exec>
-                <exec executable="${protoc.path}">
+                <exec executable="${protoc.path}" failonerror="true">
+                  <env key="PATH" path="${plugin.path}"/>
                   <arg value="--javanano_out=enum_style=java:target/generated-test-sources" />
                   <arg value="--proto_path=src/test/java/com" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_enum_class_nano.proto" />
@@ -147,7 +161,8 @@
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_repeated_packables_nano.proto" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_enum_validity_nano.proto" />
                 </exec>
-                <exec executable="${protoc.path}">
+                <exec executable="${protoc.path}" failonerror="true">
+                  <env key="PATH" path="${plugin.path}"/>
                   <arg value="--javanano_out=
                                   optional_field_style=accessors,
                                   java_outer_classname=google/protobuf/nano/unittest_enum_validity_nano.proto|EnumValidityAccessors
@@ -155,12 +170,14 @@
                   <arg value="--proto_path=src/test/java/com" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_enum_validity_nano.proto" />
                 </exec>
-                <exec executable="${protoc.path}">
+                <exec executable="${protoc.path}" failonerror="true">
+                  <env key="PATH" path="${plugin.path}"/>
                   <arg value="--javanano_out=optional_field_style=reftypes,generate_equals=true:target/generated-test-sources" />
                   <arg value="--proto_path=src/test/java/com" />
                   <arg value="src/test/java/com/google/protobuf/nano/unittest_reference_types_nano.proto" />
                 </exec>
-                <exec executable="${protoc.path}">
+                <exec executable="${protoc.path}" failonerror="true">
+                  <env key="PATH" path="${plugin.path}"/>
                   <arg value="--javanano_out=
                                   optional_field_style=reftypes_compat_mode,
                                   generate_equals=true,
