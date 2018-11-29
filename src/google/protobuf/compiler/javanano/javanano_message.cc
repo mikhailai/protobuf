@@ -515,6 +515,7 @@ void MessageGenerator::GenerateClear(io::Printer* printer) {
   }
   printer->Print(
     "\n"
+    "@Override\n"
     "public $classname$ clear() {\n",
     "classname", descriptor_->name());
   printer->Indent();

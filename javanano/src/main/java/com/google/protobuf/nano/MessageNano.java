@@ -93,6 +93,14 @@ public abstract class MessageNano {
     public abstract MessageNano mergeFrom(CodedInputByteBufferNano input) throws IOException;
 
     /**
+     * Resets all the message fields to their default values
+     */
+    public MessageNano clear() {
+      throw new UnsupportedOperationException(
+          "Generation of 'clear' method was disabled during proto compilation");
+    }
+
+    /**
      * Serialize to a byte array.
      * @return byte array with the serialized data.
      */
