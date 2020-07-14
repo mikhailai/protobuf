@@ -10,7 +10,7 @@ https://developers.google.com/protocol-buffers/
 Overview
 --------
 This repository contains Java Protocol Buffers Nano compiler plugin and
-runtime library. Google published the Java Nano code for a short time, 
+runtime library. Google published the Java Nano code for a short time,
 then stoped supporting it, and removed the code. The repository contains
 that code, made compile again. It consists of the two following components.
 
@@ -43,6 +43,7 @@ The resulting binary will be:
 
 Place it into a directory included in your PATH, and run:
 
-
     protoc --javanano_out=<dir> <NormalProtoParams>
 
+Note, this compiles against a specific protoc version: not sure if it'll work
+well with a different protoc. See the WORKSPACE file for that version.

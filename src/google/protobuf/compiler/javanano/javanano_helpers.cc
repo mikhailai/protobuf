@@ -56,7 +56,7 @@ const char kThinSeparator[] =
 
 class RenameKeywords {
  private:
-  hash_set<string> java_keywords_set_;
+  std::unordered_set<string> java_keywords_set_;
 
  public:
   RenameKeywords() {
